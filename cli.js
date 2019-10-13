@@ -41,13 +41,13 @@ function getPathesWithWeight(files) {
           id: filePath,
           name: fileName,
           parent: chunkedPath.length > 0 ? chunkedPath.join('/') : undefined,
-          value: commitCount,
+          commitCount,
         };
 
         chunkedPath.forEach((path, i) => {
           const id = chunkedPath.slice(0, i).join('/') || path;
           if (pathes.hasOwnProperty(id)) {
-            pathes[id].value += commitCount;
+            pathes[id].commitCount += commitCount;
           } else {
             const parent =
               i === 0 ? undefined : chunkedPath.slice(i - 1).join('/');
@@ -55,7 +55,7 @@ function getPathesWithWeight(files) {
               id,
               name: path,
               parent,
-              value: commitCount,
+              commitCount,
             };
           }
         });
@@ -63,7 +63,13 @@ function getPathesWithWeight(files) {
     }
   });
 
-  return pathes;
+  return sortByCommitCount(pathes);
+}
+
+function sortByCommitCount(pathes) {
+  return Object.values(pathes).sort(
+    (prevPath, path) => path.commitCount - prevPath.commitCount,
+  );
 }
 
 function getCommitsPerFile(stdout) {
