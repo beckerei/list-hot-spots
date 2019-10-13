@@ -1,0 +1,22 @@
+{
+  "name": "list-hot-spots",
+  "version": "0.0.1",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beckerei/list-hot-spots.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/beckerei/list-hot-spots/issues"
+  },
+  "homepage": "https://github.com/beckerei/list-hot-spots#readme",
+  "bin": "./cli.js",
+  "dependencies": {},
+  "devDependencies": {}
+}
