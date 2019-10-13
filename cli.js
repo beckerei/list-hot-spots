@@ -23,7 +23,7 @@ const exec = util.promisify(require('child_process').exec);
 /****/
 
 function writeToFile(pathes) {
-  fs.writeFileSync('file-treemap.json', JSON.stringify(pathes), err => {
+  fs.writeFileSync('hot-spots.json', JSON.stringify(pathes), err => {
     console.error('Could not write file!', err);
   });
 }

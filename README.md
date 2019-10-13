@@ -2,7 +2,7 @@
 
 Run `npx beckerei/list-hot-spots` in any git repository.
 
-It generates a `file-treemap.json` file with the all pathes in the project and
+It generates a `hot-spots.json` file with the all pathes in the project and
 the number of commits made in that pace.
 
 ## Example output
