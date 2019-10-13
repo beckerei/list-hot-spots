@@ -1,9 +1,24 @@
 #!/usr/bin/env node
 
+const util = require('util');
 const fs = require('fs');
-const { exec } = require('child_process');
+const exec = util.promisify(require('child_process').exec);
 
-getCommitsPerFile(getPathesWithWeight);
+(async () => {
+  const { stdout, stderr } = await exec(
+    'git log --name-only  --pretty=format: | sort | uniq -c | sort -nr',
+  );
+
+  if (stderr) {
+    console.error(`Could not execute/find git.`);
+  }
+
+  const commitsPerFile = getCommitsPerFile(stdout);
+
+  getPathesWithWeight(commitsPerFile);
+})();
+
+/****/
 
 function getPathesWithWeight(files) {
   const pathes = {};
@@ -41,28 +56,18 @@ function getPathesWithWeight(files) {
   });
 
   fs.writeFileSync('file-treemap.json', JSON.stringify(pathes), err => {
+    console.error('Could not write file!');
   });
 
   return pathes;
 }
 
-function getCommitsPerFile(cb) {
-  exec(
-    'git log --name-only  --pretty=format: | sort | uniq -c | sort -nr',
-    (err, stdout) => {
-      if (err) {
-        return null;
-      }
+function getCommitsPerFile(stdout) {
+  const lines = stdout.split('\n');
 
-      const lines = stdout.split('\n');
-
-      const commitsPerFile = lines.map(line => {
-        const cleanLine = line.trim();
-        const [commitCount, path] = cleanLine.split(' ');
-        return { commitCount: parseInt(commitCount, 10), filePath: path };
-      });
-
-      cb(commitsPerFile);
-    },
-  );
+  return lines.map(line => {
+    const cleanLine = line.trim();
+    const [commitCount, path] = cleanLine.split(' ');
+    return { commitCount: parseInt(commitCount, 10), filePath: path };
+  });
 }
