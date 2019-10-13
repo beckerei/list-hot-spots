@@ -15,10 +15,18 @@ const exec = util.promisify(require('child_process').exec);
 
   const commitsPerFile = getCommitsPerFile(stdout);
 
-  getPathesWithWeight(commitsPerFile);
+  const weightedPathes = getPathesWithWeight(commitsPerFile);
+
+  writeToFile(weightedPathes);
 })();
 
 /****/
+
+function writeToFile(pathes) {
+  fs.writeFileSync('file-treemap.json', JSON.stringify(pathes), err => {
+    console.error('Could not write file!', err);
+  });
+}
 
 function getPathesWithWeight(files) {
   const pathes = {};
@@ -53,10 +61,6 @@ function getPathesWithWeight(files) {
         });
       }
     }
-  });
-
-  fs.writeFileSync('file-treemap.json', JSON.stringify(pathes), err => {
-    console.error('Could not write file!');
   });
 
   return pathes;
