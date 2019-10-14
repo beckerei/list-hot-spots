@@ -1,24 +1,21 @@
 #!/usr/bin/env node
 
-const util = require('util');
 const fs = require('fs');
-const exec = util.promisify(require('child_process').exec);
+const execSync = require('child_process').execSync;
 
-(async () => {
-  const { stdout, stderr } = await exec(
+try {
+  const result = execSync(
     'git log --name-only  --pretty=format: | sort | uniq -c | sort -nr',
-  );
+  ).toString();
 
-  if (stderr) {
-    console.error(`Could not execute/find git.`);
-  }
-
-  const commitsPerFile = getCommitsPerFile(stdout);
+  const commitsPerFile = getCommitsPerFile(result);
 
   const weightedPathes = getPathesWithWeight(commitsPerFile);
 
   writeToFile(weightedPathes);
-})();
+} catch (e) {
+  console.error(`Could not execute/find git.`, e);
+}
 
 /****/
 
